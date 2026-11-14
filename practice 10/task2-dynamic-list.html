@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Задача 2. Динамический список</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    button {
+      padding: 8px 16px; margin-right: 8px;
+      cursor: pointer; font-size: 14px;
+    }
+    ul {
+      margin-top: 16px; padding: 12px 12px 12px 32px;
+      border: 1px solid #ddd; border-radius: 6px;
+      min-height: 40px; background: #fafafa;
+    }
+    li { margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Динамический список</h1>
+
+  <button id="add-btn">Добавить элемент</button>
+  <button id="remove-btn">Удалить</button>
+
+  <ul id="dynamic-list"></ul>
+
+  <script>
+    const list = document.getElementById('dynamic-list');
+    const addBtn = document.getElementById('add-btn');
+    const removeBtn = document.getElementById('remove-btn');
+
+    // Добавляем новый <li> в конец списка
+    addBtn.addEventListener('click', function () {
+      const li = document.createElement('li');
+      li.textContent = 'Новый элемент списка';
+      list.appendChild(li);
+    });
+
+    // Удаляем последний <li>, если он есть
+    removeBtn.addEventListener('click', function () {
+      if (list.lastElementChild) {
+        list.removeChild(list.lastElementChild);
+      }
+    });
+  </script>
+</body>
+</html>

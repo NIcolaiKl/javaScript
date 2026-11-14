@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Задача 1. Мини-галерея</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 8px; }
+
+    .thumbs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .thumbs img {
+      width: 150px; height: 100px; object-fit: cover;
+      cursor: pointer;
+      border: 3px solid transparent;
+      border-radius: 6px;
+      transition: border-color .2s, transform .2s;
+    }
+    .thumbs img:hover { border-color: #4a90d9; transform: scale(1.03); }
+
+    #big-image {
+      width: 100%; max-width: 600px; min-height: 220px;
+      border: 2px dashed #ccc; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #999; background: #fafafa; overflow: hidden;
+    }
+    #big-image img { width: 100%; display: block; border-radius: 6px; }
+  </style>
+</head>
+<body>
+
+  <h1>Мини-галерея</h1>
+  <p>Нажмите на миниатюру, чтобы увидеть изображение в полном размере.</p>
+
+  <div class="thumbs" id="thumbs">
+    <img id="thumb1" class="thumb" src="1.jpg" data-full="1.jpg" alt="Изображение 1">
+    <img id="thumb2" class="thumb" src="2.jpg" data-full="2.jpg" alt="Изображение 2">
+    <img id="thumb3" class="thumb" src="3.jpg" data-full="3.jpg" alt="Изображение 3">
+    <img id="thumb4" class="thumb" src="4.jpg" data-full="4.jpg" alt="Изображение 4">
+    <img id="thumb5" class="thumb" src="5.jpg" data-full="5.jpg" alt="Изображение 5">
+    <img id="thumb6" class="thumb" src="6.jpg" data-full="6.jpg" alt="Изображение 6">
+    <img id="thumb7" class="thumb" src="7.jpg" data-full="7.jpg" alt="Изображение 7">
+  </div>
+
+  <!-- По умолчанию блок пуст (только подсказка) -->
+  <div id="big-image">Изображение появится здесь</div>
+
+  <script>
+    const bigBlock = document.getElementById('big-image');
+    const thumbs = document.querySelectorAll('.thumb');
+
+    // Замыкание: каждый обработчик «запоминает» свою миниатюру thumb
+    thumbs.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        // Получаем URL большого изображения через DOM-метод
+        // (если больших версий нет — используется тот же файл)
+        const fullUrl = thumb.getAttribute('data-full') || thumb.src;
+
+        // Полностью перерисовываем блок под большое изображение
+        bigBlock.innerHTML = '';
+
+        const bigImg = document.createElement('img');
+        bigImg.src = fullUrl;
+        bigImg.alt = thumb.alt;
+        bigBlock.appendChild(bigImg);
+      });
+    });
+  </script>
+</body>
+</html>
