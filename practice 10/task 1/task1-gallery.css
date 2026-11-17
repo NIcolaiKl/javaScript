@@ -1,0 +1,25 @@
+body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+h1 { border-bottom: 2px solid #eee; padding-bottom: 8px; }
+
+.thumbs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.thumbs img {
+  width: 150px; height: 100px; object-fit: cover;
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 6px;
+  transition: border-color .2s, transform .2s;
+}
+.thumbs img:hover { border-color: #4a90d9; transform: scale(1.03); }
+
+/* Класс для выделения активной миниатюры */
+.thumb.active {
+  border-color: #e67e22;
+}
+
+.big-image {
+  width: 100%; max-width: 600px; min-height: 220px;
+  border: 2px dashed #ccc; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #999; background: #fafafa; overflow: hidden;
+}
+.big-image img { width: 100%; display: block; border-radius: 6px; }

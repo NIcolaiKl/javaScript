@@ -1,0 +1,12 @@
+body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; }
+form { margin-bottom: 20px; }
+.field { margin-bottom: 10px; }
+label { display: inline-block; min-width: 180px; font-weight: bold; }
+input { padding: 6px; }
+.error { color: #c00; font-size: 13px; }
+.invalid { border: 2px solid #c00; }
+button { padding: 8px 18px; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+table, th, td { border: 1px solid #ccc; }
+th, td { padding: 10px; text-align: left; }
+thead { background: #f0f0f0; }

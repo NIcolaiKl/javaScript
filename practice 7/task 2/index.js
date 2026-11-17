@@ -1,8 +1,8 @@
 let heights = [164, 157, 160, 143, 170];
 
-const heightList = document.getElementById("heightList");
-const addBtn = document.getElementById("addBtn");
-const filterBtn = document.getElementById("filterBtn");
+const heightList = document.querySelector(".height-list");
+const addBtn = document.querySelector(".add-btn");
+const filterBtn = document.querySelector(".filter-btn");
 
 function renderHeights(list) {
   heightList.innerHTML = "";
@@ -16,16 +16,22 @@ function renderHeights(list) {
 addBtn.addEventListener("click", () => {
   const input = prompt("Введите рост ученика:");
   if (input === null) return;
+  
   const trimmed = input.trim();
-  if (!trimmed) {
+  
+  if (trimmed.length === 0) {
     alert("Рост не введён!");
     return;
   }
-  const num = Number(trimmed);
+  
+  // Используем унарный плюс вместо Number()
+  const num = +trimmed; 
+  
   if (isNaN(num)) {
     alert("Введите корректное число!");
     return;
   }
+  
   heights.push(num);
   renderHeights(heights);
 });
@@ -33,14 +39,16 @@ addBtn.addEventListener("click", () => {
 filterBtn.addEventListener("click", () => {
   const input = prompt("Введите минимальный рост:");
   if (input === null) return;
+  
   const trimmed = input.trim();
 
-  if (!trimmed) {
+  if (trimmed.length === 0) {
     renderHeights(heights);
     return;
   }
 
-  const min = Number(trimmed);
+  const min = +trimmed;
+  
   if (isNaN(min)) {
     alert("Введите корректное число!");
     return;
@@ -50,4 +58,4 @@ filterBtn.addEventListener("click", () => {
   renderHeights(filtered);
 });
 
-renderHeights(heights);
+renderHeights(heights); 

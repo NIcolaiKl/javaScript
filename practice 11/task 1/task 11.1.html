@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Опрос пользователя</title>
+  <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+
+<h2>Опрос пользователя</h2>
+
+<form class="survey-form" novalidate>
+  <div class="field">
+    <label for="name">Имя пользователя *</label>
+    <input type="text" id="name" name="name" class="name-input">
+    <div class="error name-error"></div>
+  </div>
+
+  <div class="field">
+    <label for="email">Email *</label>
+    <input type="email" id="email" name="email" class="email-input">
+    <div class="error email-error"></div>
+  </div>
+
+  <div class="field">
+    <label>Пол</label>
+    <label><input type="radio" name="gender" value="Мужской" checked> Мужской</label>
+    <label><input type="radio" name="gender" value="Женский"> Женский</label>
+  </div>
+
+  <div class="field">
+    <label for="rating">Оценка сервиса: <span class="rating-value">5</span></label>
+    <input type="range" id="rating" name="rating" min="1" max="10" value="5" class="rating-input">
+  </div>
+
+  <div class="field">
+    <label>Интересы пользователя</label>
+    <label><input type="checkbox" name="interest" value="Спорт"> Спорт</label>
+    <label><input type="checkbox" name="interest" value="Музыка"> Музыка</label>
+    <label><input type="checkbox" name="interest" value="Путешествия"> Путешествия</label>
+    <label><input type="checkbox" name="interest" value="Кино"> Кино</label>
+  </div>
+
+  <div class="field">
+    <label for="comments">Дополнительные комментарии</label>
+    <textarea id="comments" name="comments" rows="3"></textarea>
+  </div>
+
+  <button type="submit">Отправить</button>
+</form>
+
+<div class="result" style="display:none;"></div>
+
+<script src="script1.js"></script>
+</body>
+</html>
