@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #d1d5db;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.promo-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  transition: all 0.3s;
+}
+
+.promo-form {
+  display: flex;
+  gap: 15px;
+}
+
+.promo-input {
+  flex-grow: 1;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.promo-submit-btn {
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.promo-success-message {
+  display: none;
+  margin-top: 15px;
+  font-size: 16px;
+  color: #3c9b45;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+
+.promo-container.success .promo-input {
+  border-color: #3c9b45;
+  background-color: #f0fdf4;
+  color: #3c9b45;
+}
+
+.promo-container.success .promo-submit-btn {
+  background-color: #3c9b45;
+}
+
+.promo-container.success .promo-success-message {
+  display: block;
+}

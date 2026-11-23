@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Всплывающее окно с подарком</title>
+  <link rel="stylesheet" href="task1.css">
+</head>
+<body>
+
+  <div class="popup-overlay hidden">
+    <div class="popup-card">
+      <div class="popup-icon-container">
+        <!-- Если картинки нет, здесь появится эмодзи -->
+        <img class="popup-icon" src="" alt="Иконка подарка">
+        <span class="popup-emoji" style="display: none;">🎁</span>
+      </div>
+      <div class="popup-content">
+        <p class="popup-title"></p>
+        <button class="popup-close-btn">Отлично!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="task1.js"></script>
+</body>
+</html>
