@@ -1,138 +1,176 @@
-// Получаем элементы
-const form = document.getElementById("film-form");
-const tbody = document.getElementById("film-tbody");
-const deleteAllBtn = document.getElementById("delete-all-btn");
+const initialMovies = [
+  { id: 1, title: "Назад в будущее", genre: "Приключение", releaseYear: 1985, isWatched: true },
+  { id: 2, title: "Матрица", genre: "Киберпанк", releaseYear: 1999, isWatched: false }
+];
 
-const filterTitle = document.getElementById("filter-title");
-const filterGenre = document.getElementById("filter-genre");
-const filterYear = document.getElementById("filter-year");
-const filterWatched = document.getElementById("filter-watched");
+const form = document.getElementById('film-form');
+const filterForm = document.getElementById('filter-form');
+const tableBody = document.getElementById('film-tbody');
+const sortSelect = document.getElementById('sort-select');
+const sortBtn = document.getElementById('sort-btn');
+const submitBtn = document.getElementById('submit-btn');
 
-// Функция получения всех фильмов из localStorage
-function getFilmsFromStorage() {
-    const stored = localStorage.getItem("films");
-    return stored ? JSON.parse(stored) : [];
-}
+let movies = [];
+let editId = null;
 
-// Функция сохранения фильмов в localStorage
-function saveFilmsToStorage(films) {
-    localStorage.setItem("films", JSON.stringify(films));
-}
+const saveData = () => localStorage.setItem('movies', JSON.stringify(movies));
 
-// 1. Валидация и добавление
-function handleFormSubmit(e) {
-    e.preventDefault();
+const loadData = () => {
+  const data = localStorage.getItem('movies');
+  movies = data ? JSON.parse(data) : [...initialMovies];
+  if (!data) saveData();
+};
 
-    const title = document.getElementById("title").value.trim();
-    const genre = document.getElementById("genre").value.trim();
-    const releaseYear = document.getElementById("releaseYear").value.trim();
-    const isWatched = document.getElementById("isWatched").checked;
+const renderTable = (data = movies) => {
+  tableBody.innerHTML = '';
+  
+  if (data.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="5" class="empty-table-msg">Нет фильмов</td></tr>`;
+    return;
+  }
 
-    // Валидация
-    if (!title || !genre || !releaseYear) {
-        alert("Пожалуйста, заполните все поля: название, жанр и год!");
-        return;
-    }
+  data.forEach(movie => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${movie.title}</td>
+      <td>${movie.genre}</td>
+      <td>${movie.releaseYear}</td>
+      <td>${movie.isWatched ? 'Да' : 'Нет'}</td>
+      <td>
+        <button class="action-btn btn-edit" data-id="${movie.id}">Редактировать</button>
+        <button class="action-btn btn-delete" data-id="${movie.id}">Удалить</button>
+      </td>
+    `;
+    tableBody.appendChild(tr);
+  });
+};
 
-    const film = {
-        id: Date.now(), // Уникальный ID на основе времени
-        title: title,
-        genre: genre,
-        releaseYear: releaseYear,
-        isWatched: isWatched
-    };
+const startEdit = (id) => {
+  const movie = movies.find(m => m.id === id);
+  if (!movie) return;
+  
+  form.elements.title.value = movie.title;
+  form.elements.genre.value = movie.genre;
+  form.elements.releaseYear.value = movie.releaseYear;
+  form.elements.isWatched.checked = movie.isWatched;
+  
+  editId = id;
+  submitBtn.textContent = 'Сохранить';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-    const films = getFilmsFromStorage();
-    films.push(film);
-    saveFilmsToStorage(films);
+const deleteMovie = (id) => {
+  movies = movies.filter(m => m.id !== id);
+  saveData();
+  renderTable();
+};
 
-    form.reset();
-    renderTable();
-}
+const actionDict = {
+  'btnDelete': deleteMovie,
+  'btnEdit': startEdit
+};
 
-// 2. Отрисовка и фильтрация
-function renderTable() {
-    const films = getFilmsFromStorage();
-    tbody.innerHTML = "";
-
-    // Получаем значения фильтров
-    const searchTitle = filterTitle.value.trim().toLowerCase();
-    const searchGenre = filterGenre.value.trim().toLowerCase();
-    const searchYear = filterYear.value.trim();
-    const searchWatched = filterWatched.value;
-
-    // Фильтруем массив
-    const filteredFilms = films.filter(film => {
-        const matchTitle = film.title.toLowerCase().includes(searchTitle);
-        const matchGenre = film.genre.toLowerCase().includes(searchGenre);
-        const matchYear = searchYear === "" || String(film.releaseYear).includes(searchYear);
-        
-        let matchWatched = true;
-        if (searchWatched === "true") matchWatched = film.isWatched === true;
-        if (searchWatched === "false") matchWatched = film.isWatched === false;
-
-        return matchTitle && matchGenre && matchYear && matchWatched;
-    });
-
-    if (filteredFilms.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Нет фильмов по заданным критериям</td></tr>`;
-        return;
-    }
-
-    // Выводим отфильтрованные фильмы
-    filteredFilms.forEach((film) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${film.title}</td>
-            <td>${film.genre}</td>
-            <td>${film.releaseYear}</td>
-            <td>${film.isWatched ? "Да" : "Нет"}</td>
-            <td>
-                <button class="btn-delete" data-id="${film.id}">Удалить</button>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// 3. Удаление одного фильма
-function deleteFilm(id) {
-    let films = getFilmsFromStorage();
-    films = films.filter(film => film.id !== id);
-    saveFilmsToStorage(films);
-    renderTable();
-}
-
-// 4. Удаление всех фильмов
-function deleteAllFilms() {
-    if (!confirm("Вы уверены, что хотите удалить ВСЕ фильмы?")) return;
+tableBody.addEventListener('click', (e) => {
+  const target = e.target;
+  
+  if (target.classList.contains('action-btn')) {
+    const actionName = target.classList[1].replace('-', '');
+    const action = actionDict[actionName];
     
-    // Очищаем localStorage
-    localStorage.removeItem("films");
-    renderTable();
-}
-
-// --- Обработчики событий ---
-
-// Отправка формы
-form.addEventListener("submit", handleFormSubmit);
-
-// Удаление фильма (делегирование событий)
-tbody.addEventListener("click", (e) => {
-    if (e.target.classList.contains("btn-delete")) {
-        const id = Number(e.target.dataset.id); // Приводим к числу, т.к. в HTML это строка
-        deleteFilm(id);
+    if (action) {
+      const id = +target.dataset.id;
+      
+      if (actionName === 'btnDelete') {
+        if (!confirm('Удалить этот фильм?')) return;
+      }
+      
+      action(id);
     }
+  }
 });
 
-// Удаление всех
-deleteAllBtn.addEventListener("click", deleteAllFilms);
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(form);
+  const title = formData.get('title').trim();
+  const genre = formData.get('genre').trim();
+  const releaseYear = formData.get('releaseYear');
+  const isWatched = formData.get('isWatched') === 'on';
 
-// Фильтрация в реальном времени
-[filterTitle, filterGenre, filterYear].forEach(input => {
-    input.addEventListener("input", renderTable);
+  if (!title || !genre || !releaseYear) {
+    alert('Заполните все поля');
+    return;
+  }
+
+  const film = {
+    title,
+    genre,
+    releaseYear: +releaseYear,
+    isWatched,
+    id: Date.now()
+  };
+
+  if (editId !== null) {
+    movies = movies.map(m => m.id === editId ? { ...m, ...film } : m);
+    editId = null;
+    submitBtn.textContent = 'Добавить';
+  } else {
+    movies.push(film);
+  }
+
+  saveData();
+  renderTable();
+  e.target.reset();
 });
-filterWatched.addEventListener("change", renderTable);
 
-// Первичная загрузка таблицы
+sortBtn.addEventListener('click', () => {
+  const value = sortSelect.value;
+  let sorted = [...movies]; 
+  
+  switch (value) {
+    case 'title-asc':
+      sorted.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+      break;
+    case 'title-desc':
+      sorted.sort((a, b) => b.title.localeCompare(a.title, 'ru'));
+      break;
+    case 'year-asc':
+      sorted.sort((a, b) => +a.releaseYear - +b.releaseYear);
+      break;
+    case 'year-desc':
+      sorted.sort((a, b) => +b.releaseYear - +a.releaseYear);
+      break;
+  }
+  
+  renderTable(sorted);
+});
+
+filterForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const filterFormData = new FormData(filterForm);
+  const entries = Array.from(filterFormData.entries()).filter(([, val]) => val.trim() !== '');
+
+  if (entries.length === 0) {
+    renderTable(movies);
+    return;
+  }
+
+  const filteredFilms = movies.filter(movie => {
+    return entries.some(([key, value]) => {
+      const searchVal = value.toLowerCase();
+      
+      if (key === 'filterTitle') return movie.title.toLowerCase().includes(searchVal);
+      if (key === 'filterGenre') return movie.genre.toLowerCase().includes(searchVal);
+      if (key === 'filterYear') return String(movie.releaseYear).includes(value);
+      
+      return false;
+    });
+  });
+
+  renderTable(filteredFilms);
+});
+
+loadData();
 renderTable();

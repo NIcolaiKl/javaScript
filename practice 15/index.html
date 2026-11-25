@@ -2,60 +2,58 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Коллекция фильмов</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Фильмотека (Тема 15)</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 <body>
-    <div class="container">
-        <form id="film-form">
-            <label for="title">Название:</label>
-            <input type="text" id="title" name="title" required>
-            
-            <label for="genre">Жанр:</label>
-            <input type="text" id="genre" name="genre" required>
-            
-            <label for="releaseYear">Год:</label>
-            <input type="number" id="releaseYear" name="releaseYear" required min="1888" max="2100">
-            
-            <div class="checkbox-wrapper">
-                <input type="checkbox" id="isWatched" name="isWatched">
-                <label for="isWatched">Успели посмотреть?</label>
-            </div>
-            
-            <button type="submit">Submit</button>
-        </form>
+    <form id="film-form">
+      <label for="title">Название:</label>
+      <input type="text" id="title" name="title" />
+      
+      <label for="genre">Жанр:</label>
+      <input type="text" id="genre" name="genre" />
+      
+      <label for="releaseYear">Год:</label>
+      <input type="number" id="releaseYear" name="releaseYear" />
+      
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="isWatched" name="isWatched" />
+        <label for="isWatched">Успели посмотреть?</label>
+      </div>
+      
+      <button type="submit" id="submit-btn">Добавить</button>
+    </form>
 
-        <div class="controls">
-            <div class="filters">
-                <input type="text" id="filter-title" placeholder="Название фильма">
-                <input type="text" id="filter-genre" placeholder="Жанр">
-                <input type="number" id="filter-year" placeholder="Год релиза">
-                <select id="filter-watched">
-                    <option value="">Все</option>
-                    <option value="true">Просмотренные</option>
-                    <option value="false">Непросмотренные</option>
-                </select>
-            </div>
-            <button id="delete-all-btn" class="btn-danger">Удалить все</button>
-        </div>
+    <div class="controls">
+      <select id="sort-select">
+        <option value="title-asc">Название (А-Я)</option>
+        <option value="title-desc">Название (Я-А)</option>
+        <option value="year-asc">Год (по возрастанию)</option>
+        <option value="year-desc">Год (по убыванию)</option>
+      </select>
+      <button id="sort-btn">Сортировать</button>
 
-        <table id="film-table">
-            <thead>
-                <tr>
-                    <th>Название</th>
-                    <th>Жанр</th>
-                    <th>Год</th>
-                    <th>Успели посмотреть?</th>
-                    <th>Действие</th>
-                </tr>
-            </thead>
-            <tbody id="film-tbody">
-                <!-- Строки добавляются через JS -->
-            </tbody>
-        </table>
+      <!-- Форма для фильтрации -->
+      <form id="filter-form">
+        <input type="text" name="filterTitle" placeholder="Поиск по названию">
+        <input type="text" name="filterGenre" placeholder="Поиск по жанру">
+        <input type="number" name="filterYear" placeholder="Поиск по году">
+        <button type="submit">Фильтровать</button>
+      </form>
     </div>
 
+    <table id="film-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Жанр</th>
+          <th>Год</th>
+          <th>Успели посмотреть?</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody id="film-tbody"></tbody>
+    </table>
     <script src="script.js"></script>
 </body>
 </html>

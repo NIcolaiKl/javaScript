@@ -1,138 +1,149 @@
-let sortMode = 'none';
+const initialMovies = [
+  { id: 1, title: "Назад в будущее", genre: "Приключение", releaseYear: 1985, isWatched: true },
+  { id: 2, title: "Матрица", genre: "Киберпанк", releaseYear: 1999, isWatched: false }
+];
 
-function handleFormSubmit(e) {
-    e.preventDefault();
+const form = document.getElementById('film-form');
+const tableBody = document.getElementById('film-tbody');
+const sortSelect = document.getElementById('sort-select');
+const sortBtn = document.getElementById('sort-btn');
+const submitBtn = document.getElementById('submit-btn');
 
-    const title = document.querySelector('#title').value.trim();
-    const genre = document.querySelector('#genre').value.trim();
-    const releaseYear = document.querySelector('#releaseYear').value;
-    const isWatched = document.querySelector('#isWatched').checked;
+let movies = [];
+let editId = null;
 
-    if (!title || !genre || !releaseYear) {
-        alert('Заполните все поля');
-        return;
+const saveData = () => localStorage.setItem('movies', JSON.stringify(movies));
+
+const loadData = () => {
+  const data = localStorage.getItem('movies');
+  movies = data ? JSON.parse(data) : [...initialMovies];
+  if (!data) saveData();
+};
+
+const renderTable = (data = movies) => {
+  tableBody.innerHTML = '';
+  
+  if (data.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="5" class="empty-table-msg">Нет фильмов</td></tr>`;
+    return;
+  }
+
+  data.forEach(movie => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${movie.title}</td>
+      <td>${movie.genre}</td>
+      <td>${movie.releaseYear}</td>
+      <td>${movie.isWatched ? 'Да' : 'Нет'}</td>
+      <td>
+        <button class="action-btn btn-edit" data-id="${movie.id}">Редактировать</button>
+        <button class="action-btn btn-delete" data-id="${movie.id}">Удалить</button>
+      </td>
+    `;
+    tableBody.appendChild(tr);
+  });
+};
+
+const startEdit = (id) => {
+  const movie = movies.find(m => m.id === id);
+  if (!movie) return;
+  
+  form.elements.title.value = movie.title;
+  form.elements.genre.value = movie.genre;
+  form.elements.releaseYear.value = movie.releaseYear;
+  form.elements.isWatched.checked = movie.isWatched;
+  
+  editId = id;
+  submitBtn.textContent = 'Сохранить';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const deleteMovie = (id) => {
+  movies = movies.filter(m => m.id !== id);
+  saveData();
+  renderTable();
+};
+
+const actionDict = {
+  'btnDelete': deleteMovie,
+  'btnEdit': startEdit
+};
+
+tableBody.addEventListener('click', (e) => {
+  const target = e.target;
+  
+  if (target.classList.contains('action-btn')) {
+    const actionName = target.classList[1].replace('-', '');
+    const action = actionDict[actionName];
+    
+    if (action) {
+      const id = +target.dataset.id;
+      
+      if (actionName === 'btnDelete') {
+        if (!confirm('Удалить этот фильм?')) return;
+      }
+      
+      action(id);
     }
-
-    const film = {
-        title,
-        genre,
-        releaseYear,
-        isWatched,
-        id: Date.now()
-    };
-
-    addFilmToLocalStorage(film);
-    e.target.reset();
-}
-
-function addFilmToLocalStorage(film) {
-    const films = JSON.parse(localStorage.getItem('films')) || [];
-    films.push(film);
-    localStorage.setItem('films', JSON.stringify(films));
-    renderTable();
-}
-
-function getSortedFilms(films) {
-    const sorted = [...films];
-
-    switch (sortMode) {
-        case 'title-asc':
-            sorted.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
-            break;
-        case 'title-desc':
-            sorted.sort((a, b) => b.title.localeCompare(a.title, 'ru'));
-            break;
-        case 'year-asc':
-            sorted.sort((a, b) => Number(a.releaseYear) - Number(b.releaseYear));
-            break;
-        case 'year-desc':
-            sorted.sort((a, b) => Number(b.releaseYear) - Number(a.releaseYear));
-            break;
-        default:
-            break;
-    }
-
-    return sorted;
-}
-
-function renderTable() {
-    const films = JSON.parse(localStorage.getItem('films')) || [];
-    const filmTableBody = document.querySelector('#film-tbody');
-
-    filmTableBody.innerHTML = "";
-
-    const filmsToRender = getSortedFilms(films);
-
-    filmsToRender.forEach((film) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${film.title}</td>
-            <td>${film.genre}</td>
-            <td>${film.releaseYear}</td>
-            <td>${film.isWatched ? "Да" : "Нет"}</td>
-            <td>
-                <button class="btn-edit" data-id="${film.id}">Редактировать</button>
-                <button class="btn-delete" data-id="${film.id}">Удалить</button>
-            </td>
-        `;
-        filmTableBody.appendChild(row);
-    });
-}
-
-function deleteFilm(id) {
-    const films = JSON.parse(localStorage.getItem('films')) || [];
-    const filtered = films.filter(film => film.id !== id);
-    localStorage.setItem('films', JSON.stringify(filtered));
-    renderTable();
-}
-
-function editFilm(id) {
-    const films = JSON.parse(localStorage.getItem('films')) || [];
-    const film = films.find(film => film.id === id);
-
-    if (!film) return;
-
-    const newTitle = prompt('Название фильма:', film.title);
-    if (newTitle === null) return;
-
-    const newGenre = prompt('Жанр:', film.genre);
-    if (newGenre === null) return;
-
-    const newYear = prompt('Год выпуска:', film.releaseYear);
-    if (newYear === null) return;
-
-    const newWatched = confirm('Фильм просмотрен? (ОК — Да, Отмена — Нет)');
-
-    film.title = newTitle.trim() || film.title;
-    film.genre = newGenre.trim() || film.genre;
-    film.releaseYear = newYear.trim() || film.releaseYear;
-    film.isWatched = newWatched;
-
-    localStorage.setItem('films', JSON.stringify(films));
-    renderTable();
-}
-
-document.querySelector('#film-form').addEventListener('submit', handleFormSubmit);
-
-document.querySelector('#film-tbody').addEventListener('click', (e) => {
-    const target = e.target;
-
-    if (target.classList.contains('btn-delete')) {
-        const id = Number(target.dataset.id);
-        if (confirm('Удалить этот фильм?')) {
-            deleteFilm(id);
-        }
-    }
-
-    if (target.classList.contains('btn-edit')) {
-        const id = Number(target.dataset.id);
-        editFilm(id);
-    }
+  }
 });
 
-document.querySelector('#sort-select').addEventListener('change', (e) => {
-    sortMode = e.target.value;
-    renderTable();
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(form);
+  const title = formData.get('title').trim();
+  const genre = formData.get('genre').trim();
+  const releaseYear = formData.get('releaseYear');
+  const isWatched = formData.get('isWatched') === 'on';
+
+  if (!title || !genre || !releaseYear) {
+    alert('Заполните все поля');
+    return;
+  }
+
+  const film = {
+    title,
+    genre,
+    releaseYear: +releaseYear,
+    isWatched,
+    id: Date.now()
+  };
+
+  if (editId !== null) {
+    movies = movies.map(m => m.id === editId ? { ...m, ...film } : m);
+    editId = null;
+    submitBtn.textContent = 'Добавить';
+  } else {
+    movies.push(film);
+  }
+
+  saveData();
+  renderTable();
+  e.target.reset();
 });
 
+sortBtn.addEventListener('click', () => {
+  const value = sortSelect.value;
+  let sorted = [...movies]; 
+  
+  switch (value) {
+    case 'title-asc':
+      sorted.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+      break;
+    case 'title-desc':
+      sorted.sort((a, b) => b.title.localeCompare(a.title, 'ru'));
+      break;
+    case 'year-asc':
+      sorted.sort((a, b) => +a.releaseYear - +b.releaseYear);
+      break;
+    case 'year-desc':
+      sorted.sort((a, b) => +b.releaseYear - +a.releaseYear);
+      break;
+  }
+  
+  renderTable(sorted);
+});
+
+loadData();
 renderTable();

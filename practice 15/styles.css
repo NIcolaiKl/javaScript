@@ -1,150 +1,135 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 30px;
-    color: #333;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 30px;
+  color: #333;
 }
 
 form {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #999;
 }
 
 form label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 form input[type="text"],
 form input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-family: inherit;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 .checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
 }
 
 .checkbox-wrapper label {
-    margin-bottom: 0;
+  margin-bottom: 0;
+  margin-left: 8px;
+  font-weight: normal;
 }
 
-form button[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    border: 0;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
+form input[type="checkbox"] {
+  margin: 0;
 }
 
-form button[type="submit"]:hover {
-    background-color: #444;
+form button {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+form button:hover {
+  background-color: #e2e6ea;
 }
 
 .controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    align-items: center;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
-.filters {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    flex-wrap: wrap;
+.controls select, 
+.controls button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
 }
 
-.filters input,
-.filters select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: inherit;
-    flex: 1;
-    min-width: 120px;
+/* Стили для формы фильтрации */
+#filter-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #999;
+  align-items: center;
 }
 
-.btn-danger {
-    background-color: #d32f2f;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.btn-danger:hover {
-    background-color: #b71c1c;
+#filter-form input {
+  margin-bottom: 0;
+  width: 140px;
 }
 
 table {
-    width: 100%;
-    background-color: #fff;
-    text-align: left;
-    border-collapse: collapse;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  background-color: #fff;
+  text-align: left;
+  border-collapse: collapse;
+  box-shadow: 0px 0px 5px #999;
 }
 
 th, td {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
-    background-color: #333;
-    color: #fff;
-    font-weight: normal;
+  background-color: #333;
+  color: #fff;
 }
 
-tbody tr:last-child td {
-    border-bottom: none;
+td {
+  vertical-align: top;
 }
 
-.btn-delete {
-    background-color: #d32f2f;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+.action-btn {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-right: 5px;
 }
 
-.btn-delete:hover {
-    background-color: #b71c1c;
+.action-btn:hover {
+  background-color: #eee;
+}
+
+.empty-table-msg {
+  text-align: center;
+  color: #666;
+  font-style: italic;
 }
