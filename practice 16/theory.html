@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Задания 1-3 (try..catch)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+    button { 
+      display: block; 
+      margin-bottom: 10px; 
+      padding: 10px 15px; 
+      cursor: pointer; 
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+    button:hover { background-color: #e2e6ea; }
+    h2 { font-size: 20px; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+
+  <h2>Практика 16. Задания 1-3</h2>
+  <p>Откройте консоль браузера, чтобы увидеть результат.</p>
+
+  <button class="btn-task1">Задание 1: Скрытая проблема</button>
+  <button class="btn-task2">Задание 2: Проверка имени</button>
+  <button class="btn-task3">Задание 3: Тест области видимости ошибок</button>
+
+  <script>
+    function hello() {
+      console.log('Skill');
+    }
+
+    document.querySelector('.btn-task1').addEventListener('click', () => {
+      console.log('--- Задание 1 ---');
+      try { 
+        helo();
+      } catch (error) {
+        console.error("Обнаружена проблема:", error.message); 
+      }
+      console.log('complete');
+    });
+
+
+    function greeting() {
+      const username = prompt("Введите имя пользователя");
+      if (!username || username.trim().length === 0) {
+        throw new Error("Имя обязательно для заполнения");
+      }
+    }
+
+    document.querySelector('.btn-task2').addEventListener('click', () => {
+      try { 
+        greeting();
+      } catch(error) { 
+        alert(error.message);
+      }
+    });
+
+
+    function globalError() {
+      const error = Error('Глобальная ошибка');
+      error.name = 'GlobalError';
+      throw error;
+    }
+
+    function localError() {
+      const error = Error('Локальная ошибка');
+      error.name = 'LocalError';
+      throw error;
+    }
+
+    function testErrorScope(fn) {
+      try {
+        try {
+          fn();
+        } catch (error) {
+          if (error.name === 'GlobalError') {
+            throw error; 
+          }
+          console.log('Обнаружена локальная ошибка');
+          console.error(error);
+        }
+      } catch (error) {
+        console.log('Обнаружена глобальная ошибка');
+        console.error(error);
+      }
+    }
+
+    document.querySelector('.btn-task3').addEventListener('click', () => {
+      console.log('--- Задание 3 ---');
+      testErrorScope(localError);
+      testErrorScope(globalError);
+    });
+  </script>
+
+</body>
+</html>
